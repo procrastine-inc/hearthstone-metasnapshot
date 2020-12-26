@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/components/text.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:http/http.dart' as http;
 
-const String usage = "This page shows the latest deck trends of the month.";
+const String usage = "The latest deck trends of the month";
 
 class NumericComboLinePointChart extends StatelessWidget {
   final List<charts.Series> seriesList;
@@ -19,6 +20,12 @@ class NumericComboLinePointChart extends StatelessWidget {
     );
   }
 
+  var axis = charts.NumericAxisSpec(
+      renderSpec: charts.GridlineRendererSpec(
+        labelStyle: charts.TextStyleSpec(
+            fontSize: 10, color: charts.MaterialPalette.white), //chnage white color as per your requirement.
+      ));
+
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +34,29 @@ class NumericComboLinePointChart extends StatelessWidget {
         // Configure the default renderer as a line renderer. This will be used
         // for any series that does not define a rendererIdKey.
         defaultRenderer: new charts.LineRendererConfig(),
+        domainAxis: new charts.NumericAxisSpec(
+            renderSpec: new charts.SmallTickRendererSpec(
+
+              // Tick and Label styling here.
+                labelStyle: new charts.TextStyleSpec(
+                    fontSize: 18, // size in Pts.
+                    color: charts.MaterialPalette.white),
+
+                // Change the line colors to match text color.
+                lineStyle: new charts.LineStyleSpec(
+                    color: charts.MaterialPalette.white))),
+        /// Assign a custom style for the measure axis.
+        primaryMeasureAxis: new charts.NumericAxisSpec(
+            renderSpec: new charts.GridlineRendererSpec(
+
+              // Tick and Label styling here.
+                labelStyle: new charts.TextStyleSpec(
+                    fontSize: 18, // size in Pts.
+                    color: charts.MaterialPalette.white),
+
+                // Change the line colors to match text color.
+                lineStyle: new charts.LineStyleSpec(
+                    color: charts.MaterialPalette.white))),
         // Custom renderer configuration for the point series.
         customSeriesRenderers: [
           new charts.PointRendererConfig(
@@ -37,6 +67,7 @@ class NumericComboLinePointChart extends StatelessWidget {
 
   /// Create one series with sample hard coded data.
   static List<charts.Series<LinearSales, int>> _createSampleData() {
+
     final desktopSalesData = [
       new LinearSales(0, 5),
       new LinearSales(1, 25),
@@ -85,6 +116,7 @@ class NumericComboLinePointChart extends StatelessWidget {
   }
 }
 
+
 /// Sample linear data type.
 class LinearSales {
   final int year;
@@ -102,13 +134,13 @@ class DeckTrendsPage extends StatelessWidget {
           title: Text("Deck trends"),
         ),
         body: Padding(
-          padding: EdgeInsets.zero,
+          padding: EdgeInsets.all(20.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              // textWidgets.title('Observations', 5, 10, 30),
-              //Text(usage, style: TextStyle(fontSize: 18)),
+              // textWidgets.title(usage, 0, 5, 0, 10, 30),
+              Text(usage, style: TextStyle(fontSize: 18)),
               Expanded(child: NumericComboLinePointChart.withSampleData())
             ],
           ),
