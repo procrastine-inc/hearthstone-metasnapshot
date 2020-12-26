@@ -10,14 +10,14 @@ class IntroductionPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("HSmeta"),
+          title: Text("Introduction"),
         ),
         body: Padding(
           padding: EdgeInsets.all(10),
           child: Column(
             children: [
-              textWidgets.title('Introduction', 5, 10, 30),
-              textWidgets.title('HOW TO USE THE META SNAPSHOT', 5, 5, 20),
+              // textWidgets.title('Introduction', 5, 10, 30),
+              textWidgets.title('HOW TO USE THE META SNAPSHOT', 0, 5, 0, 5, 20),
               Text(usage, style: TextStyle(fontSize: 18))
             ],
           ),

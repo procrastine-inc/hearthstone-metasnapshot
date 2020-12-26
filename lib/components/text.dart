@@ -2,9 +2,15 @@ import 'package:flutter/material.dart';
 
 class textWidgets {
 
-  static Widget title(String text, double top, double bottom, double fontSize){
+  static Widget title(
+      String text,
+      double left,
+      double top,
+      double right,
+      double bottom,
+      double fontSize){
     return Padding(
-      padding: EdgeInsets.only(top: top, bottom: bottom),
+      padding: EdgeInsets.fromLTRB(left, top, right, bottom),
       child: Align(
         alignment: Alignment.centerLeft,
         child: Text(text,
