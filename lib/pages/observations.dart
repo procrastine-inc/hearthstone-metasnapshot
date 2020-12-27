@@ -59,7 +59,7 @@ class ObservationsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("HSmeta"),
+          title: Text("Observations"),
         ),
         resizeToAvoidBottomPadding: false,
         body: SingleChildScrollView(

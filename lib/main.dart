@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/pages/deckTrends.dart';
 import 'package:flutter_app/pages/introduction.dart';
 import 'package:flutter_app/components/text.dart';
 import 'package:flutter_app/pages/observations.dart';
