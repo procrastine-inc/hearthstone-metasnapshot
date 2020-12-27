@@ -93,18 +93,16 @@ List<DecksRankings> parseRankings(String responseBody) {
 class DecksRankings {
   final int snapNumber;
   final int amount;
-  final int maxRank;
   final String name;
   final int tier;
   final List<int> ranks;
 
-  DecksRankings(this.snapNumber, this.amount, this.maxRank, this.name, this.tier, [this.ranks]);
+  DecksRankings(this.snapNumber, this.amount, this.name, this.tier, [this.ranks]);
 
   factory DecksRankings.fromJson(int snapNum, dynamic json) {
     return DecksRankings(
         snapNum,
         List.from(json['ranks']).length,
-        List.from(json['ranks']).reduce((curr, next) => curr > next? curr: next),
         json['name'] as String,
         json['tier'] as int,
         List.from(json['ranks']));
