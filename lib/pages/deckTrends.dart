@@ -168,7 +168,7 @@ class DeckTrendsPageState extends State<DeckTrendsPage> {
           title: Text("Deck trends"),
         ),
         body: Padding(
-          padding: EdgeInsets.all(20.0),
+          padding: EdgeInsets.only(left: 10.0, top: 0.0, right: 30.0, bottom: 10.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
