@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:http/http.dart' as http;
 
-const String usage = "The latest deck trends of the month";
+const String usage = "The deck trends of the month";
 
 class NumericComboLinePointChart extends StatelessWidget {
   final List<charts.Series> seriesList;
@@ -155,7 +155,16 @@ List<charts.Series<LinearDecksRankings, int>> transformData(List<DecksRankings> 
   return result;
 }
 
-class DeckTrendsPage extends StatelessWidget {
+class DeckTrendsPage extends StatefulWidget {
+
+
+  @override
+  DeckTrendsPageState createState() => DeckTrendsPageState();
+}
+
+class DeckTrendsPageState extends State<DeckTrendsPage> {
+  String selectedValue = 'Tier 1';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -170,12 +179,16 @@ class DeckTrendsPage extends StatelessWidget {
             children: <Widget>[
               Container(
                   margin: const EdgeInsets.all(10.0),
-                  child: Text(
-                      usage,
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold
-                      )
+                  child: DropdownButton<String>(
+                          value: selectedValue,
+                          onChanged: (String result) { setState(() { selectedValue = result; });},
+                    items: <String>['Tier 1', 'Tier 2', 'Tier 3', 'Tier 4', 'Tier 5']
+                        .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value, style: TextStyle(fontSize: 18),),
+                          );
+                        }).toList(),
                   )
               ),
               FutureBuilder<List<DecksRankings>>(
@@ -184,17 +197,19 @@ class DeckTrendsPage extends StatelessWidget {
                   if (snapshot.hasError) print(snapshot.error);
                   return snapshot.hasData
                       ? Expanded(
-                          child: NumericComboLinePointChart(
-                              transformData(snapshot.data, 1),
-                              animate: false,
-                              startPoint: (snapshot.data[0].snapNumber - snapshot.data[0].amount).toDouble(),
-                              endPoint: (snapshot.data[0].snapNumber).toDouble()))
+                      child: NumericComboLinePointChart(
+                          transformData(snapshot.data, int.parse(selectedValue[selectedValue.length - 1])),
+                          animate: false,
+                          startPoint: (snapshot.data[0].snapNumber - snapshot.data[0].amount).toDouble(),
+                          endPoint: (snapshot.data[0].snapNumber).toDouble()))
                       : Expanded(child: Container(alignment: Alignment.center, child: CircularProgressIndicator()));
                 },
               ),
+
             ],
           ),
         )
     );
   }
+
 }
