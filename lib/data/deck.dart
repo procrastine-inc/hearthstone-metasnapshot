@@ -40,7 +40,7 @@ class MatchUp {
 }
 
 final decks = <Deck>[
-  Deck(1,'H1',[1,2,3,4],'j','sc','m','mnb',[DeckCard(1, 'j', 2, 'bj', 6), DeckCard(1, 'j', 2, 'bj', 6)], [MatchUp('cd','sd',7)]),
+  Deck(1,'H1',[1,2,3,4],'j','sc','m','mnb',[DeckCard(1, 'j', 2, 'bj', 6), DeckCard(1, 'j', 2, 'bj', 6), DeckCard(1, 'j', 2, 'bj', 6), DeckCard(1, 'j', 2, 'bj', 6)], [MatchUp('cd','sd',7)]),
   Deck(1,'H1',[1,2,3,4],'j','sc','m','mnb',[DeckCard(1, 'j', 2, 'bj', 6), DeckCard(1, 'j', 2, 'bj', 6)], [MatchUp('cd','sd',7)]),
   Deck(2,'H2',[1,2,3,4],'j','sc','m','mnb',[DeckCard(1, 'j', 2, 'bj', 6), DeckCard(1, 'j', 2, 'bj', 6)], [MatchUp('cd','sd',7)]),
 ];
