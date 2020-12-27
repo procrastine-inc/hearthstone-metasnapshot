@@ -36,8 +36,6 @@ class NumericComboLinePointChart extends StatelessWidget {
         // for any series that does not define a rendererIdKey.
         defaultRenderer: new charts.LineRendererConfig(includePoints: true),
         domainAxis: new charts.NumericAxisSpec(
-            tickProviderSpec:
-            new charts.BasicNumericTickProviderSpec(desiredTickCount: 0),
             renderSpec: new charts.SmallTickRendererSpec(
 
               // Tick and Label styling here.
@@ -51,8 +49,6 @@ class NumericComboLinePointChart extends StatelessWidget {
             viewport: new charts.NumericExtents(startPoint, endPoint)),
         /// Assign a custom style for the measure axis.
         primaryMeasureAxis: new charts.NumericAxisSpec(
-            tickProviderSpec:
-              new charts.BasicNumericTickProviderSpec(desiredTickCount: 0),
             renderSpec: new charts.GridlineRendererSpec(
 
               // Tick and Label styling here.
@@ -197,11 +193,11 @@ class DeckTrendsPageState extends State<DeckTrendsPage> {
                   if (snapshot.hasError) print(snapshot.error);
                   return snapshot.hasData
                       ? Expanded(
-                      child: NumericComboLinePointChart(
-                          transformData(snapshot.data, int.parse(selectedValue[selectedValue.length - 1])),
-                          animate: false,
-                          startPoint: (snapshot.data[0].snapNumber - snapshot.data[0].amount).toDouble(),
-                          endPoint: (snapshot.data[0].snapNumber).toDouble()))
+                          child: NumericComboLinePointChart(
+                            transformData(snapshot.data, int.parse(selectedValue[selectedValue.length - 1])),
+                            animate: false,
+                            startPoint: (snapshot.data[0].snapNumber - snapshot.data[0].amount).toDouble(),
+                            endPoint: (snapshot.data[0].snapNumber).toDouble()))
                       : Expanded(child: Container(alignment: Alignment.center, child: CircularProgressIndicator()));
                 },
               ),
