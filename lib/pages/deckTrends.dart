@@ -1,5 +1,10 @@
+import 'dart:convert';
+import 'dart:core';
+import 'dart:math';
+import 'dart:ui';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app/components/text.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:http/http.dart' as http;
 
@@ -8,50 +13,51 @@ const String usage = "The latest deck trends of the month";
 class NumericComboLinePointChart extends StatelessWidget {
   final List<charts.Series> seriesList;
   final bool animate;
+  final double startPoint;
+  final double endPoint;
 
-  NumericComboLinePointChart(this.seriesList, {this.animate});
-
-  /// Creates a [LineChart] with sample data and no transition.
-  factory NumericComboLinePointChart.withSampleData() {
-    return new NumericComboLinePointChart(
-      _createSampleData(),
-      // Disable animations for image tests.
-      animate: false,
-    );
-  }
+  NumericComboLinePointChart(this.seriesList, {this.animate, this.startPoint, this.endPoint});
 
   var axis = charts.NumericAxisSpec(
       renderSpec: charts.GridlineRendererSpec(
+        labelRotation: 90,
         labelStyle: charts.TextStyleSpec(
-            fontSize: 10, color: charts.MaterialPalette.white), //chnage white color as per your requirement.
+            fontSize: 16,
+            color: charts.MaterialPalette.white
+        ), //change white color as per your requirement.
       ));
-
 
   @override
   Widget build(BuildContext context) {
     return new charts.NumericComboChart(seriesList,
         animate: animate,
+        behaviors: [charts.SeriesLegend(desiredMaxColumns: 2)],
         // Configure the default renderer as a line renderer. This will be used
         // for any series that does not define a rendererIdKey.
-        defaultRenderer: new charts.LineRendererConfig(),
+        defaultRenderer: new charts.LineRendererConfig(includePoints: true),
         domainAxis: new charts.NumericAxisSpec(
+            tickProviderSpec:
+            new charts.BasicNumericTickProviderSpec(desiredTickCount: 0),
             renderSpec: new charts.SmallTickRendererSpec(
 
               // Tick and Label styling here.
                 labelStyle: new charts.TextStyleSpec(
-                    fontSize: 18, // size in Pts.
+                    fontSize: 16, // size in Pts.
                     color: charts.MaterialPalette.white),
 
                 // Change the line colors to match text color.
                 lineStyle: new charts.LineStyleSpec(
-                    color: charts.MaterialPalette.white))),
+                    color: charts.MaterialPalette.white)),
+            viewport: new charts.NumericExtents(startPoint, endPoint)),
         /// Assign a custom style for the measure axis.
         primaryMeasureAxis: new charts.NumericAxisSpec(
+            tickProviderSpec:
+              new charts.BasicNumericTickProviderSpec(desiredTickCount: 0),
             renderSpec: new charts.GridlineRendererSpec(
 
               // Tick and Label styling here.
                 labelStyle: new charts.TextStyleSpec(
-                    fontSize: 18, // size in Pts.
+                    fontSize: 16, // size in Pts.
                     color: charts.MaterialPalette.white),
 
                 // Change the line colors to match text color.
@@ -64,69 +70,92 @@ class NumericComboLinePointChart extends StatelessWidget {
               customRendererId: 'customPoint')
         ]);
   }
+}
 
-  /// Create one series with sample hard coded data.
-  static List<charts.Series<LinearSales, int>> _createSampleData() {
+Future<List<DecksRankings>> fetchRankings(http.Client client) async {
+  final response =
+    await client.get('https://tempostorm.com/api/snapshots/findOne?filter={%22where%22:{%22slug%22:%222020-12-14%22,%22snapshotType%22:%22standard%22},%22include%22:[{%22relation%22:%22deckTiers%22,%22scope%22:{%22include%22:[{%22relation%22:%22deck%22,%22scope%22:{%22fields%22:[%22id%22,%22name%22,%22slug%22,%22playerClass%22],%22include%22:{%22relation%22:%22slugs%22,%22scope%22:{%22fields%22:[%22linked%22,%22slug%22]}}}},{%22relation%22:%22deckTech%22,%22scope%22:{%22include%22:[{%22relation%22:%22cardTech%22,%22scope%22:{%22include%22:[{%22relation%22:%22card%22,%22scope%22:{%22fields%22:[%22name%22]}}]}}]}}]}}]}');
 
-    final desktopSalesData = [
-      new LinearSales(0, 5),
-      new LinearSales(1, 25),
-      new LinearSales(2, 100),
-      new LinearSales(3, 75),
-    ];
+  // Use the compute function to run parsePhotos in a separate isolate.
+  return compute(parseRankings, response.body);
+  // return parseRankings(response.body);
+}
 
-    final tableSalesData = [
-      new LinearSales(0, 10),
-      new LinearSales(1, 50),
-      new LinearSales(2, 200),
-      new LinearSales(3, 150),
-    ];
+List<DecksRankings> parseRankings(String responseBody) {
+  final Map<String, dynamic> parsed = jsonDecode(responseBody);
 
-    final mobileSalesData = [
-      new LinearSales(0, 10),
-      new LinearSales(1, 50),
-      new LinearSales(2, 200),
-      new LinearSales(3, 150),
-    ];
+  List<DecksRankings> result = new List<DecksRankings>();
+  int snapNum = parsed['snapNum'];
+  List<dynamic> deckTiers = parsed['deckTiers'];
+  print(deckTiers.length);
+  for (var x in deckTiers) {
+    result.add(DecksRankings.fromJson(snapNum, x));
+  }
+  
+  return result;
+}
 
-    return [
-      new charts.Series<LinearSales, int>(
-        id: 'Desktop',
-        colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
-        domainFn: (LinearSales sales, _) => sales.year,
-        measureFn: (LinearSales sales, _) => sales.sales,
-        data: desktopSalesData,
-      ),
-      new charts.Series<LinearSales, int>(
-        id: 'Tablet',
-        colorFn: (_, __) => charts.MaterialPalette.red.shadeDefault,
-        domainFn: (LinearSales sales, _) => sales.year,
-        measureFn: (LinearSales sales, _) => sales.sales,
-        data: tableSalesData,
-      ),
-      new charts.Series<LinearSales, int>(
-          id: 'Mobile',
-          colorFn: (_, __) => charts.MaterialPalette.green.shadeDefault,
-          domainFn: (LinearSales sales, _) => sales.year,
-          measureFn: (LinearSales sales, _) => sales.sales,
-          data: mobileSalesData)
-      // Configure our custom point renderer for this series.
-        ..setAttribute(charts.rendererIdKey, 'customPoint'),
-    ];
+class DecksRankings {
+  final int snapNumber;
+  final int amount;
+  final int maxRank;
+  final String name;
+  final int tier;
+  final List<int> ranks;
+
+  DecksRankings(this.snapNumber, this.amount, this.maxRank, this.name, this.tier, [this.ranks]);
+
+  factory DecksRankings.fromJson(int snapNum, dynamic json) {
+    return DecksRankings(
+        snapNum,
+        List.from(json['ranks']).length,
+        List.from(json['ranks']).reduce((curr, next) => curr > next? curr: next),
+        json['name'] as String,
+        json['tier'] as int,
+        List.from(json['ranks']));
   }
 }
 
+class LinearDecksRankings {
+  final int snapNum;
+  final int rank;
 
-/// Sample linear data type.
-class LinearSales {
-  final int year;
-  final int sales;
+  LinearDecksRankings(this.snapNum, this.rank);
+}
 
-  LinearSales(this.year, this.sales);
+List<charts.Series<LinearDecksRankings, int>> transformData(List<DecksRankings> data, int tier) {
+  Map<String, List<LinearDecksRankings>> tempResult = new Map<String, List<LinearDecksRankings>>();
+
+  for (var x in data) {
+    if (x.tier == tier) {
+      int currSnapNum = x.snapNumber;
+      List<LinearDecksRankings> linearRankings = new List<LinearDecksRankings>();
+      for (var y in x.ranks) {
+        linearRankings.add(new LinearDecksRankings(currSnapNum, y != 0 ? y : null));
+        --currSnapNum;
+      }
+      tempResult[x.name] = linearRankings;
+    }
+  }
+
+  List<charts.Series<LinearDecksRankings, int>> result = new List<charts.Series<LinearDecksRankings, int>>();
+    tempResult.forEach((key, value) {
+      charts.Color c = charts.ColorUtil.fromDartColor(Colors.primaries[Random().nextInt(Colors.primaries.length)]);
+      result.add(
+          new charts.Series<LinearDecksRankings, int>(
+            id: key,
+            colorFn: (_, __) => c,
+            domainFn: (LinearDecksRankings element, _) => element.snapNum,
+            measureFn: (LinearDecksRankings element, _) => element.rank,
+            data: value,
+          ));
+    }
+  );
+
+  return result;
 }
 
 class DeckTrendsPage extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -139,9 +168,30 @@ class DeckTrendsPage extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              // textWidgets.title(usage, 0, 5, 0, 10, 30),
-              Text(usage, style: TextStyle(fontSize: 18)),
-              Expanded(child: NumericComboLinePointChart.withSampleData())
+              Container(
+                  margin: const EdgeInsets.all(10.0),
+                  child: Text(
+                      usage,
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold
+                      )
+                  )
+              ),
+              FutureBuilder<List<DecksRankings>>(
+                future: fetchRankings(http.Client()),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) print(snapshot.error);
+                  return snapshot.hasData
+                      ? Expanded(
+                          child: NumericComboLinePointChart(
+                              transformData(snapshot.data, 1),
+                              animate: false,
+                              startPoint: (snapshot.data[0].snapNumber - snapshot.data[0].amount).toDouble(),
+                              endPoint: (snapshot.data[0].snapNumber).toDouble()))
+                      : Expanded(child: Container(alignment: Alignment.center, child: CircularProgressIndicator()));
+                },
+              ),
             ],
           ),
         )
