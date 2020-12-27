@@ -80,11 +80,16 @@ Future<List<Deck>> fetchDecks(http.Client client, int tier) async {
   List<Deck> result = new List<Deck>();
   List<dynamic> deckTiers = parsed['deckTiers'];
   for (var snapshotDeck in deckTiers) {
-    if (snapshotDeck['tier'] == tier) {
-      final slug = snapshotDeck['deck']['slugs']['slug'];
+    int currTier = snapshotDeck['tier'] as int;
+    if (currTier == tier) {
+
+      dynamic decks = snapshotDeck['deck'];
+      dynamic slugs = decks['slugs'];
+      print(slugs);
+      String slug = slugs.first['slug'];
 
       final deckResponse =
-        await client.get('https://tempostorm.com/api/decks/findOne?filter={"where":{"slug":$slug},"fields":["id","createdDate","name","name_ru","description","description_ru","playerClass","premium","dust","heroName","authorId","deckType","isPublic","chapters","chapters_ru","youtubeId","gameModeType","isActive","isCommentable","isMultilingual"],"include":[{"relation":"cards","scope":{"include":"card","scope":{"fields":["id","name","name_ru","cardType","cost","dust","photoNames"]}}},{"relation":"comments","scope":{"fields":["id","votes","voteScore","authorId","createdDate","text"],"include":{"relation":"author","scope":{"fields":["id","username","gravatarUrl"]}},"order":"createdDate+DESC"}},{"relation":"author","scope":{"fields":["id","username","gravatarUrl"]}},{"relation":"matchups","scope":{"fields":["forChance","deckName","deckName_ru","className"]}},{"relation":"votes","fields":["id","direction","authorId"]}]}');
+        await client.get('https://tempostorm.com/api/decks/findOne?filter={"where":{"slug":"$slug"},"fields":["id","createdDate","name","name_ru","description","description_ru","playerClass","premium","dust","heroName","authorId","deckType","isPublic","chapters","chapters_ru","youtubeId","gameModeType","isActive","isCommentable","isMultilingual"],"include":[{"relation":"cards","scope":{"include":"card","scope":{"fields":["id","name","name_ru","cardType","cost","dust","photoNames"]}}},{"relation":"comments","scope":{"fields":["id","votes","voteScore","authorId","createdDate","text"],"include":{"relation":"author","scope":{"fields":["id","username","gravatarUrl"]}},"order":"createdDate+DESC"}},{"relation":"author","scope":{"fields":["id","username","gravatarUrl"]}},{"relation":"matchups","scope":{"fields":["forChance","deckName","deckName_ru","className"]}},{"relation":"votes","fields":["id","direction","authorId"]}]}');
       final Map<String, dynamic> parsedDeckResponse = jsonDecode(deckResponse.body);
       final matchUpResponse = parseMatchUp(parsedDeckResponse);
       final cardsResponse = parseCards(parsedDeckResponse);
@@ -115,7 +120,7 @@ List<MatchUp> parseMatchUp(Map<String, dynamic> parsed) {
   return result;
 }
 
-final decks = <Deck>[
+final decks_test = <Deck>[
   Deck(1,'H1',[1,2,3,4],'j','sc','m','mnb',[DeckCard(1, 'j', 2, 'bj', 6), DeckCard(1, 'j', 2, 'bj', 6), DeckCard(1, 'j', 2, 'bj', 6), DeckCard(1, 'j', 2, 'bj', 6)], [MatchUp('cd','sd',7)]),
   Deck(1,'H1',[1,2,3,4],'j','sc','m','mnb',[DeckCard(1, 'j', 2, 'bj', 6), DeckCard(1, 'j', 2, 'bj', 6)], [MatchUp('cd','sd',7)]),
   Deck(2,'H2',[1,2,3,4],'j','sc','m','mnb',[DeckCard(1, 'j', 2, 'bj', 6), DeckCard(1, 'j', 2, 'bj', 6)], [MatchUp('cd','sd',7)]),
