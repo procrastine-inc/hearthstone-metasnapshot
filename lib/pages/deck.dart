@@ -62,7 +62,9 @@ class DeckPage extends StatelessWidget {
                   textWidgets.title('Description:', 5, 5, 20),
                   Text(deck.description, style: TextStyle(fontSize: 18)),
                   textWidgets.title('Matchups:', 5, 5, 20),
-                  Container(alignment: Alignment.center, width: 350, height: 350, child: CustomRoundedBars(transformMatchUp(deck.matchUps), animate: false)),
+                  deck.matchUps.length > 0 ?
+                    Container(alignment: Alignment.center, width: 350, height: 350, child: CustomRoundedBars(transformMatchUp(deck.matchUps), animate: false))
+                    : Text('No matchups available', style: TextStyle(fontSize: 18)),
                   textWidgets.title('Cards:', 5, 5, 20),
                   CardsComponent(cards: deck.cards)
                 ]
