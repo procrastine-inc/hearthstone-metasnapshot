@@ -59,15 +59,13 @@ class DeckCard {
 
 class MatchUp {
   String deckName;
-  String className; // you can remove it
   int forChance;
 
-  MatchUp(this.deckName, this.className, this.forChance);
+  MatchUp(this.deckName, this.forChance);
 
   factory MatchUp.fromJson(dynamic json) {
     return MatchUp(
         json['deckName'] as String,
-        json['className'] as String,
         json['forChance'] as int);
   }
 }
@@ -119,9 +117,3 @@ List<MatchUp> parseMatchUp(Map<String, dynamic> parsed) {
 
   return result;
 }
-
-final decks_test = <Deck>[
-  Deck(1,'H1',[1,2,3,4],'j','sc','m','mnb',[DeckCard(1, 'j', 2, 'bj', 6), DeckCard(1, 'j', 2, 'bj', 6), DeckCard(1, 'j', 2, 'bj', 6), DeckCard(1, 'j', 2, 'bj', 6)], [MatchUp('cd','sd',7)]),
-  Deck(1,'H1',[1,2,3,4],'j','sc','m','mnb',[DeckCard(1, 'j', 2, 'bj', 6), DeckCard(1, 'j', 2, 'bj', 6)], [MatchUp('cd','sd',7)]),
-  Deck(2,'H2',[1,2,3,4],'j','sc','m','mnb',[DeckCard(1, 'j', 2, 'bj', 6), DeckCard(1, 'j', 2, 'bj', 6)], [MatchUp('cd','sd',7)]),
-];

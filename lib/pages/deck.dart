@@ -61,6 +61,8 @@ class DeckPage extends StatelessWidget {
                   ),
                   textWidgets.title('Description:', 5, 5, 20),
                   Text(deck.description, style: TextStyle(fontSize: 18)),
+                  textWidgets.title('Matchups:', 5, 5, 20),
+                  Container(alignment: Alignment.center, width: 350, height: 350, child: CustomRoundedBars(transformMatchUp(deck.matchUps), animate: false)),
                   textWidgets.title('Cards:', 5, 5, 20),
                   CardsComponent(cards: deck.cards)
                 ]
@@ -149,18 +151,62 @@ class CardsComponent extends StatelessWidget {
 }
 
 List<charts.Series<MatchUp, String>> transformMatchUp(List<MatchUp> data) {
-  List<charts.Series<MatchUp, String>> result = new List<charts.Series<MatchUp, String>>();
-  for (var x in data) {
-    charts.Color c = charts.ColorUtil.fromDartColor(Colors.primaries[Random().nextInt(Colors.primaries.length)]);
-    result.add(
-        new charts.Series<MatchUp, String>(
-          id: x.deckName,
-          colorFn: (_, __) => c,
-          domainFn: (MatchUp element, _) => element.deckName,
-          measureFn: (MatchUp element, _) => element.forChance,
-          data: data,
-        ));
-  }
+  return [
+    new charts.Series<MatchUp, String>(
+      id: 'Matchup',
+      colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
+      // colorFn: (_, __) => charts.ColorUtil.fromDartColor(Colors.primaries[Random().nextInt(Colors.primaries.length)]),
+      domainFn: (MatchUp element, _) => element.deckName,
+      measureFn: (MatchUp element, _) => element.forChance,
+      labelAccessorFn: (MatchUp element, _) =>
+        '${element.forChance.toString()}%',
+      data: data,
+    )
+  ];
+}
 
-  return result;
+class CustomRoundedBars extends StatelessWidget {
+  final List<charts.Series> seriesList;
+  final bool animate;
+
+  CustomRoundedBars(this.seriesList, {this.animate});
+
+  @override
+  Widget build(BuildContext context) {
+    return new charts.BarChart(
+      seriesList,
+      animate: animate,
+      barRendererDecorator: new charts.BarLabelDecorator(
+        insideLabelStyleSpec: new charts.TextStyleSpec(
+            fontSize: 18,
+            color: charts.Color.white),
+        outsideLabelStyleSpec: new charts.TextStyleSpec(
+            fontSize: 18,
+            color: charts.Color.white)
+      ),
+      domainAxis: new charts.OrdinalAxisSpec(
+          renderSpec: new charts.SmallTickRendererSpec(
+              labelStyle: new charts.TextStyleSpec(
+                  fontSize: 16, // size in Pts.
+                  color: charts.MaterialPalette.white),
+              labelRotation: 50,
+              lineStyle: new charts.LineStyleSpec(
+                  color: charts.MaterialPalette.white))),
+      primaryMeasureAxis: new charts.NumericAxisSpec(
+        tickProviderSpec: new charts.BasicNumericTickProviderSpec(
+            //dataIsInWholeNumbers: true,
+            desiredTickCount: 6
+        ),
+        renderSpec: new charts.GridlineRendererSpec(
+            labelStyle: new charts.TextStyleSpec(
+                fontSize: 16, // size in Pts.
+                color: charts.MaterialPalette.white),
+            lineStyle: new charts.LineStyleSpec(
+                color: charts.MaterialPalette.white)),
+        viewport: new charts.NumericExtents(0, 100),
+      ),
+      defaultRenderer: new charts.BarRendererConfig(
+          cornerStrategy: const charts.ConstCornerStrategy(30)),
+    );
+  }
 }
