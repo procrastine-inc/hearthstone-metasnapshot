@@ -83,7 +83,6 @@ List<DecksRankings> parseRankings(String responseBody) {
   List<DecksRankings> result = new List<DecksRankings>();
   int snapNum = parsed['snapNum'];
   List<dynamic> deckTiers = parsed['deckTiers'];
-  print(deckTiers.length);
   for (var x in deckTiers) {
     result.add(DecksRankings.fromJson(snapNum, x));
   }
@@ -119,7 +118,7 @@ class LinearDecksRankings {
   LinearDecksRankings(this.snapNum, this.rank);
 }
 
-List<charts.Series<LinearDecksRankings, int>> transformData(List<DecksRankings> data, int tier) {
+List<charts.Series<LinearDecksRankings, int>> transformRankingData(List<DecksRankings> data, int tier) {
   Map<String, List<LinearDecksRankings>> tempResult = new Map<String, List<LinearDecksRankings>>();
 
   for (var x in data) {
@@ -194,7 +193,7 @@ class DeckTrendsPageState extends State<DeckTrendsPage> {
                   return snapshot.hasData
                       ? Expanded(
                           child: NumericComboLinePointChart(
-                            transformData(snapshot.data, int.parse(selectedValue[selectedValue.length - 1])),
+                            transformRankingData(snapshot.data, int.parse(selectedValue[selectedValue.length - 1])),
                             animate: false,
                             startPoint: (snapshot.data[0].snapNumber - snapshot.data[0].amount).toDouble(),
                             endPoint: (snapshot.data[0].snapNumber).toDouble()))

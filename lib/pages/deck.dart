@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_app/components/text.dart';
+import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter_app/data/deck.dart';
 
 class DeckPage extends StatelessWidget {
@@ -143,4 +146,21 @@ class CardsComponent extends StatelessWidget {
       ),
     );
   }
+}
+
+List<charts.Series<MatchUp, String>> transformMatchUp(List<MatchUp> data) {
+  List<charts.Series<MatchUp, String>> result = new List<charts.Series<MatchUp, String>>();
+  for (var x in data) {
+    charts.Color c = charts.ColorUtil.fromDartColor(Colors.primaries[Random().nextInt(Colors.primaries.length)]);
+    result.add(
+        new charts.Series<MatchUp, String>(
+          id: x.deckName,
+          colorFn: (_, __) => c,
+          domainFn: (MatchUp element, _) => element.deckName,
+          measureFn: (MatchUp element, _) => element.forChance,
+          data: data,
+        ));
+  }
+
+  return result;
 }
