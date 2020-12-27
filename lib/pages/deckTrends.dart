@@ -6,6 +6,7 @@ import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:flutter_app/data/deck.dart';
 import 'package:http/http.dart' as http;
 
 const String usage = "The deck trends of the month";
@@ -105,14 +106,14 @@ class LinearDecksRankings {
   LinearDecksRankings(this.snapNum, this.rank);
 }
 
-List<charts.Series<LinearDecksRankings, int>> transformRankingData(List<DecksRankings> data, int tier) {
+List<charts.Series<LinearDecksRankings, int>> transformRankingData(List<Deck> data, int tier) {
   Map<String, List<LinearDecksRankings>> tempResult = new Map<String, List<LinearDecksRankings>>();
 
   for (var x in data) {
     if (x.tier == tier) {
       int currSnapNum = x.snapNumber;
       List<LinearDecksRankings> linearRankings = new List<LinearDecksRankings>();
-      for (var y in x.ranks) {
+      for (var y in x.rank) {
         linearRankings.add(new LinearDecksRankings(currSnapNum, y != 0 ? y : null));
         --currSnapNum;
       }
@@ -138,7 +139,9 @@ List<charts.Series<LinearDecksRankings, int>> transformRankingData(List<DecksRan
 }
 
 class DeckTrendsPage extends StatefulWidget {
+  final List<Deck> data;
 
+  DeckTrendsPage({Key key, @required this.data}) : super(key: key);
 
   @override
   DeckTrendsPageState createState() => DeckTrendsPageState();
@@ -164,30 +167,22 @@ class DeckTrendsPageState extends State<DeckTrendsPage> {
                   child: DropdownButton<String>(
                           value: selectedValue,
                           onChanged: (String result) { setState(() { selectedValue = result; });},
-                    items: <String>['Tier 1', 'Tier 2', 'Tier 3', 'Tier 4', 'Tier 5']
-                        .map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value, style: TextStyle(fontSize: 18),),
-                          );
-                        }).toList(),
+                          items: <String>['Tier 1', 'Tier 2', 'Tier 3', 'Tier 4', 'Tier 5']
+                              .map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value, style: TextStyle(fontSize: 18),),
+                                );
+                              }).toList(),
                   )
               ),
-              FutureBuilder<List<DecksRankings>>(
-                future: fetchRankings(http.Client()),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) print(snapshot.error);
-                  return snapshot.hasData
-                      ? Expanded(
-                          child: NumericComboLinePointChart(
-                            transformRankingData(snapshot.data, int.parse(selectedValue[selectedValue.length - 1])),
-                            animate: false,
-                            startPoint: (snapshot.data[0].snapNumber - snapshot.data[0].amount).toDouble(),
-                            endPoint: (snapshot.data[0].snapNumber).toDouble()))
-                      : Expanded(child: Container(alignment: Alignment.center, child: CircularProgressIndicator()));
-                },
+              Expanded(
+                  child: NumericComboLinePointChart(
+                      transformRankingData(widget.data, int.parse(selectedValue[selectedValue.length - 1])),
+                      animate: false,
+                      startPoint: (widget.data[0].snapNumber - widget.data[0].amount).toDouble(),
+                      endPoint: (widget.data[0].snapNumber).toDouble())
               ),
-
             ],
           ),
         )

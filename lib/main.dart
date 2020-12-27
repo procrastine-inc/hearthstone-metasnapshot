@@ -55,7 +55,7 @@ class HomePage extends StatelessWidget {
                               textWidgets.redirectButton(
                                   'Observations', ObservationsPage(), context),
                               textWidgets.redirectButton(
-                                  'Deck trends', DeckTrendsPage(), context),
+                                  'Deck trends', DeckTrendsPage(data: snapshot.data.toList(),), context),
                               //change page
                               textWidgets.redirectButton(
                                   'Tier1', TierPage(tier: 1, decks: snapshot.data.where((deck) => deck.tier == 1).toList(),),
