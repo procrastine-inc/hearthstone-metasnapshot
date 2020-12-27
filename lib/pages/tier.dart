@@ -40,7 +40,7 @@ class TierPage extends StatelessWidget {
                     );
                   },
                 )
-              : Expanded(child: Container(alignment: Alignment.center, child: CircularProgressIndicator()));
+              : Container(alignment: Alignment.center, child: CircularProgressIndicator());
         }
       ),
     );
