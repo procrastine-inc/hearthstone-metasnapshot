@@ -33,6 +33,7 @@ class HomePage extends StatelessWidget {
                 textWidgets.redirectButton('Tier2', TierPage(tier: 2), context),
                 textWidgets.redirectButton('Tier3', TierPage(tier: 3), context),
                 textWidgets.redirectButton('Tier4', TierPage(tier: 4), context),
+                textWidgets.redirectButton('Tier5', TierPage(tier: 5), context),
               ]
           ),
         ),
