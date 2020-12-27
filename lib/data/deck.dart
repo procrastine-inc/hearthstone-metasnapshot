@@ -3,10 +3,13 @@ import 'dart:core';
 import 'package:http/http.dart' as http;
 
 class Deck {
+  final int snapNumber;
   final int tier;
   final String name;
   final List<int> rank;
+  final int amount;
   final String deckType;
+  final int dust;
   final String description;
   final String heroName;
   final String playerClass;
@@ -14,22 +17,28 @@ class Deck {
   final List<MatchUp> matchUps;
 
   Deck(
+      this.snapNumber,
       this.tier,
       this.name,
       this.rank,
+      this.amount,
       this.deckType,
+      this.dust,
       this.description,
       this.heroName,
       this.playerClass,
       this.cards,
       this.matchUps);
 
-  factory Deck.fromJson(dynamic snapshotResponse, dynamic parsedDeckResponse, List<DeckCard> cardsList, List<MatchUp> matchUpList) {
+  factory Deck.fromJson(dynamic snapshotResponse, dynamic parsedDeckResponse, List<DeckCard> cardsList, List<MatchUp> matchUpList, int snapNum) {
     return Deck(
+        snapNum,
         snapshotResponse['tier'] as int,
         snapshotResponse['name'] as String,
         List.from(snapshotResponse['ranks']),
+        List.from(snapshotResponse['ranks']).length,
         parsedDeckResponse['deckType'] as String,
+        parsedDeckResponse['dust'] as int,
         parsedDeckResponse['description'] as String,
         parsedDeckResponse['heroName'] as String,
         parsedDeckResponse['playerClass'] as String,
@@ -75,6 +84,7 @@ Future<List<Deck>> fetchDecks(http.Client client) async {
       await client.get('https://tempostorm.com/api/snapshots/findOne?filter={"where":{"slug":"2020-12-14","snapshotType":"standard"},"include":[{"relation":"comments","scope":{"include":[{"relation":"author","scope":{"fields":["username","gravatarUrl"]}}],"order":"createdDate+DESC"}},{"relation":"deckMatchups","scope":{"include":[{"relation":"forDeck","scope":{"fields":["name","name_ru","playerClass"]}},{"relation":"againstDeck","scope":{"fields":["name","name_ru","playerClass"]}}]}},{"relation":"deckTiers","scope":{"include":[{"relation":"deck","scope":{"fields":["id","name","slug","playerClass"],"include":{"relation":"slugs","scope":{"fields":["linked","slug"]}}}},{"relation":"deckTech","scope":{"include":[{"relation":"cardTech","scope":{"include":[{"relation":"card","scope":{"fields":["name","name_ru","photoNames"]}}]}}]}}]}},{"relation":"authors","scope":{"include":[{"relation":"user","scope":{"fields":["username","social"]}}]}},{"relation":"votes","scope":{"fields":["direction","authorId"]}},{"relation":"slugs","scope":{"fields":["linked","slug"]}}]}');
   final Map<String, dynamic> parsed = jsonDecode(snapshotResponse.body);
 
+  int snapNum = parsed['snapNum'];
   List<Deck> result = new List<Deck>();
   List<dynamic> deckTiers = parsed['deckTiers'];
   for (var snapshotDeck in deckTiers) {
@@ -88,7 +98,7 @@ Future<List<Deck>> fetchDecks(http.Client client) async {
     final Map<String, dynamic> parsedDeckResponse = jsonDecode(deckResponse.body);
     final matchUpResponse = parseMatchUp(parsedDeckResponse);
     final cardsResponse = parseCards(parsedDeckResponse);
-    result.add(Deck.fromJson(snapshotDeck, parsedDeckResponse, cardsResponse, matchUpResponse));
+    result.add(Deck.fromJson(snapshotDeck, parsedDeckResponse, cardsResponse, matchUpResponse, snapNum));
   }
 
   return result;

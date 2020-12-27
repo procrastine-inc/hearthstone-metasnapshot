@@ -59,6 +59,18 @@ class DeckPage extends StatelessWidget {
                       ),
                     ],
                   ),
+                  Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      textWidgets.title('Total dust:', 5, 5, 20),
+                      Flexible(
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 20),
+                          child: Text(deck.dust.toString(), style: TextStyle(fontSize: 18)),
+                        ),
+                      ),
+                    ],
+                  ),
                   textWidgets.title('Description:', 5, 5, 20),
                   Text(deck.description, style: TextStyle(fontSize: 18)),
                   textWidgets.title('Matchups:', 5, 5, 20),
