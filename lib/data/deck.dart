@@ -1,3 +1,8 @@
+import 'dart:convert';
+import 'dart:core';
+import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
+
 class Deck {
   final int tier;
   final String name;
@@ -37,6 +42,34 @@ class MatchUp {
   int forChance;
 
   MatchUp(this.deckName, this.className, this.forChance);
+
+  factory MatchUp.fromJson(dynamic json) {
+    return MatchUp(
+        json['deckName'] as String,
+        json['className'] as String,
+        json['forChance'] as int);
+  }
+}
+
+Future<List<MatchUp>> fetchMatchUp(http.Client client, String slug) async {
+  final response =
+  await client.get('https://tempostorm.com/api/decks/findOne?filter={"where":{"slug":$slug},"fields":["id","createdDate","name","name_ru","description","description_ru","playerClass","premium","dust","heroName","authorId","deckType","isPublic","chapters","chapters_ru","youtubeId","gameModeType","isActive","isCommentable","isMultilingual"],"include":[{"relation":"cards","scope":{"include":"card","scope":{"fields":["id","name","name_ru","cardType","cost","dust","photoNames"]}}},{"relation":"comments","scope":{"fields":["id","votes","voteScore","authorId","createdDate","text"],"include":{"relation":"author","scope":{"fields":["id","username","gravatarUrl"]}},"order":"createdDate+DESC"}},{"relation":"author","scope":{"fields":["id","username","gravatarUrl"]}},{"relation":"matchups","scope":{"fields":["forChance","deckName","deckName_ru","className"]}},{"relation":"votes","fields":["id","direction","authorId"]}]}');
+
+  // Use the compute function to run parsePhotos in a separate isolate.
+  return compute(parseMatchUp, response.body);
+  // return parseRankings(response.body);
+}
+
+List<MatchUp> parseMatchUp(String responseBody) {
+  final Map<String, dynamic> parsed = jsonDecode(responseBody);
+
+  List<MatchUp> result = new List<MatchUp>();
+  List<dynamic> deckTiers = parsed['matchups'];
+  for (var x in deckTiers) {
+    result.add(MatchUp.fromJson(x));
+  }
+
+  return result;
 }
 
 final decks = <Deck>[
