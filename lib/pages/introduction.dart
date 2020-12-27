@@ -58,7 +58,7 @@ class IntroductionPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("HSmeta"),
+          title: Text("Introduction"),
         ),
         body: SingleChildScrollView(
           child: Padding(

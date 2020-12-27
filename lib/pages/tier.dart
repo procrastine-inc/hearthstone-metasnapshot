@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/data/deck.dart';
 import 'package:flutter_app/pages/deck.dart';
+import 'package:http/http.dart' as http;
 
 class TierPage extends StatelessWidget {
   final List<Deck> decks;
-  final String tier;
+  final int tier;
 
   TierPage({Key key, @required this.decks, @required this.tier}) : super(key: key);
 
@@ -12,20 +13,48 @@ class TierPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Tier' + tier),
+        title: Text('Tier' + tier.toString()),
       ),
+      // body: FutureBuilder<List<Deck>>(
+      //     future: fetchDecks(http.Client(), tier),
+      //     builder: (context, snapshot) {
+      //       if (snapshot.hasError) print(snapshot.error);
+      //       return snapshot.hasData
+      //           ? ListView.builder(
+      //         itemCount: snapshot.data.where((deck) => deck.tier == tier).length,
+      //         itemBuilder: (context, index) {
+      //           return SingleChildScrollView(
+      //             child: Card(
+      //                 child: ListTile(
+      //                   title: Text(snapshot.data.where((deck) => deck.tier == tier).toList()[index].name),
+      //                   onTap: () {
+      //                     Navigator.push(
+      //                       context,
+      //                       MaterialPageRoute(
+      //                         builder: (context) => DeckPage(deck: snapshot.data.where((deck) => deck.tier == tier).toList()[index]),
+      //                       ),
+      //                     );
+      //                   },
+      //                 )
+      //             ),
+      //           );
+      //         },
+      //       )
+      //           : Container(alignment: Alignment.center, child: CircularProgressIndicator());
+      //     }
+      // ),
       body: ListView.builder(
-        itemCount: decks.length,
+        itemCount: decks.where((deck) => deck.tier == tier).length,
         itemBuilder: (context, index) {
           return SingleChildScrollView(
             child: Card(
                 child: ListTile(
-                  title: Text(decks[index].name),
+                  title: Text(decks.where((deck) => deck.tier == tier).toList()[index].name),
                   onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => DeckPage(deck: decks[index]),
+                        builder: (context) => DeckPage(deck: decks.where((deck) => deck.tier == tier).toList()[index]),
                       ),
                     );
                   },
@@ -33,7 +62,7 @@ class TierPage extends StatelessWidget {
             ),
           );
         },
-      ),
+      )
     );
   }
 }
