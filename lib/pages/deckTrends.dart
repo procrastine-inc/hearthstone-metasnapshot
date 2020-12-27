@@ -32,37 +32,24 @@ class NumericComboLinePointChart extends StatelessWidget {
     return new charts.NumericComboChart(seriesList,
         animate: animate,
         behaviors: [charts.SeriesLegend(desiredMaxColumns: 2)],
-        // Configure the default renderer as a line renderer. This will be used
-        // for any series that does not define a rendererIdKey.
         defaultRenderer: new charts.LineRendererConfig(includePoints: true),
         domainAxis: new charts.NumericAxisSpec(
             renderSpec: new charts.SmallTickRendererSpec(
-
-              // Tick and Label styling here.
                 labelStyle: new charts.TextStyleSpec(
                     fontSize: 16, // size in Pts.
                     color: charts.MaterialPalette.white),
-
-                // Change the line colors to match text color.
                 lineStyle: new charts.LineStyleSpec(
                     color: charts.MaterialPalette.white)),
             viewport: new charts.NumericExtents(startPoint, endPoint)),
-        /// Assign a custom style for the measure axis.
         primaryMeasureAxis: new charts.NumericAxisSpec(
             renderSpec: new charts.GridlineRendererSpec(
-
-              // Tick and Label styling here.
                 labelStyle: new charts.TextStyleSpec(
                     fontSize: 16, // size in Pts.
                     color: charts.MaterialPalette.white),
-
-                // Change the line colors to match text color.
                 lineStyle: new charts.LineStyleSpec(
                     color: charts.MaterialPalette.white))),
-        // Custom renderer configuration for the point series.
         customSeriesRenderers: [
           new charts.PointRendererConfig(
-            // ID used to link series to this renderer.
               customRendererId: 'customPoint')
         ]);
   }

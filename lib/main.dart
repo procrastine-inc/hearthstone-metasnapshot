@@ -29,10 +29,11 @@ class HomePage extends StatelessWidget {
                 textWidgets.redirectButton('Introduction', IntroductionPage(), context),
                 textWidgets.redirectButton('Observations', ObservationsPage(), context),
                 textWidgets.redirectButton('Deck trends', DeckTrendsPage(), context), //change page
-                textWidgets.redirectButton('Tier1', TierPage(decks: decks.where((deck) => deck.tier == 1).toList(), tier: "1"), context),
-                textWidgets.redirectButton('Tier2', TierPage(decks: decks.where((deck) => deck.tier == 2).toList(), tier: "2"), context),
-                textWidgets.redirectButton('Tier3', TierPage(decks: decks.where((deck) => deck.tier == 3).toList(), tier: "3"), context),
-                textWidgets.redirectButton('Tier4', TierPage(decks: decks.where((deck) => deck.tier == 4).toList(), tier: "4"), context),
+                textWidgets.redirectButton('Tier1', TierPage(tier: 1), context),
+                textWidgets.redirectButton('Tier2', TierPage(tier: 2), context),
+                textWidgets.redirectButton('Tier3', TierPage(tier: 3), context),
+                textWidgets.redirectButton('Tier4', TierPage(tier: 4), context),
+                textWidgets.redirectButton('Tier5', TierPage(tier: 5), context),
               ]
           ),
         ),
