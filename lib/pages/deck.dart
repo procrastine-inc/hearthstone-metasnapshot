@@ -98,12 +98,12 @@ class DeckPage extends StatelessWidget {
                         child: Container(
                             alignment: Alignment.center,
                             width: 350, height: 350,
-                            child: Expanded(child: CustomRoundedBars(
+                            child: CustomRoundedBars(
                                 transformMatchUp(deck.matchUps),
                                 animate: false)
                             )
-                        )
-                      ) : textWidgets.text('No matchups available',context),
+                      )
+                          : textWidgets.text('No matchups available',context),
                       textWidgets.paragraph('Cards:',context),
                       CardsComponent(cards: deck.cards)
                     ]
