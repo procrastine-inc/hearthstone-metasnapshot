@@ -82,9 +82,9 @@ class textWidgets {
 
   static Widget text(String text, BuildContext context){
     return Align(
-        alignment: Alignment.centerLeft,
-        child: Text(text, style: CustomTextStyle.text(context)),
-      );
+      alignment: Alignment.centerLeft,
+      child: Text(text, style: CustomTextStyle.text(context)),
+    );
   }
 
   static Widget logo(BuildContext context){

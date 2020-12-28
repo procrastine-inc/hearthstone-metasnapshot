@@ -38,9 +38,9 @@ class NumericComboLinePointChart extends StatelessWidget {
         behaviors: [charts.SeriesLegend(
             desiredMaxColumns: 2,
             entryTextStyle: charts.TextStyleSpec(
-            color: charts.Color(r: 255, g: 255, b: 255),
-            fontFamily: 'EncodeSansExpanded',
-            fontSize: 12))],
+                color: charts.Color(r: 255, g: 255, b: 255),
+                fontFamily: 'EncodeSansExpanded',
+                fontSize: 12))],
         defaultRenderer: new charts.LineRendererConfig(includePoints: true),
         domainAxis: new charts.NumericAxisSpec(
             renderSpec: new charts.SmallTickRendererSpec(
@@ -219,7 +219,8 @@ class DeckTrendsPageState extends State<DeckTrendsPage> {
                   ),
                 ],
               ),
-            ))
+            )
+        )
     );
   }
 

@@ -207,7 +207,7 @@ List<charts.Series<MatchUp, String>> transformMatchUp(List<MatchUp> data) {
       domainFn: (MatchUp element, _) => element.deckName,
       measureFn: (MatchUp element, _) => element.forChance,
       labelAccessorFn: (MatchUp element, _) =>
-        '${element.forChance.toString()}%',
+      '${element.forChance.toString()}%',
       data: data,
     )
   ];
@@ -225,12 +225,12 @@ class CustomRoundedBars extends StatelessWidget {
       seriesList,
       animate: animate,
       barRendererDecorator: new charts.BarLabelDecorator(
-        insideLabelStyleSpec: new charts.TextStyleSpec(
-            fontSize: 18,
-            color: charts.Color.white),
-        outsideLabelStyleSpec: new charts.TextStyleSpec(
-            fontSize: 18,
-            color: charts.Color.white)
+          insideLabelStyleSpec: new charts.TextStyleSpec(
+              fontSize: 18,
+              color: charts.Color.white),
+          outsideLabelStyleSpec: new charts.TextStyleSpec(
+              fontSize: 18,
+              color: charts.Color.white)
       ),
       domainAxis: new charts.OrdinalAxisSpec(
           renderSpec: new charts.SmallTickRendererSpec(
@@ -242,7 +242,7 @@ class CustomRoundedBars extends StatelessWidget {
                   color: charts.MaterialPalette.white))),
       primaryMeasureAxis: new charts.NumericAxisSpec(
         tickProviderSpec: new charts.BasicNumericTickProviderSpec(
-            //dataIsInWholeNumbers: true,
+          //dataIsInWholeNumbers: true,
             desiredTickCount: 6
         ),
         renderSpec: new charts.GridlineRendererSpec(

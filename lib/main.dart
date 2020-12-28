@@ -37,7 +37,7 @@ class HomePage extends StatelessWidget {
           title: textWidgets.header('Home', context),
         ),
         body: Container(
-          height: MediaQuery.of(context).size.height,
+            height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
               image: DecorationImage(
