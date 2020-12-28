@@ -1,25 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/components/text.dart';
 
-//delete this in future
+import 'package:HSmeta/components/text.dart';
+
 const String usage =
 '''This tier list shows the best decks to play in Ranked mode to maximize the 
 chances of winning the game and climbing the ladder.
-
 Click on the name of the archetype in each tier to expand more details about the deck.
-
 The "Archetype Explanation" section gives a general explanation of the archetype 
 as a whole. It will present playstyle strategies, discuss different variants of 
 the deck, and help you identify the deck on ladder. The "Weekly Meta" section 
 analyzes the role of the deck in the current week's meta, and focuses in on 
 the nuances of playing the current week's featured deck variant.
-
 The "Tech Decision" section suggests card substitution options that you may 
 consider if you are frequently facing a particular type of deck on ladder (i.e., 
 you are being swarmed by aggro, or constantly queue into control decks). The 
 "Match-ups" section gives an approximate average percentage chance that you 
 will win a game when facing another Tier 1 or Tier 2 deck.
-
 Click on the "View Deck" button to view in-depth information about the deck, 
 such as the card composition, mana curve, mulligans, and more. The date in the 
 title of the deck is the date on which that variant of the deck was first posted 
@@ -58,23 +54,42 @@ class IntroductionPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Introduction"),
-        ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.all(10),
-            child: Column(
-              children: [
-                textWidgets.title('Introduction', 5, 10, 30),
-                textWidgets.title('HOW TO USE THE META SNAPSHOT', 5, 5, 20),
-                Text(usage, style: TextStyle(fontSize: 18)),
-                textWidgets.title('LEGEND:', 5, 5, 20),
-                Text(legend, style: TextStyle(fontSize: 18)),
-                textWidgets.title('NEXT UPDATE', 5, 5, 20),
-                Text(update, style: TextStyle(fontSize: 18)),
-              ],
+          flexibleSpace: Container(
+            decoration:
+            BoxDecoration(
+              color: Color.fromRGBO(0, 0, 0, 0.5),
+              image: DecorationImage(
+                image: AssetImage('images/bcg1.png'),
+                colorFilter: ColorFilter.mode(Colors.black54, BlendMode.overlay),
+                fit: BoxFit.cover,
+              ),
             ),
           ),
+          backgroundColor: Colors.transparent,
+          title: textWidgets.header('HSmeta', context),
+        ),
+        body: Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: ExactAssetImage("images/bcg1.png"),
+                  fit: BoxFit.fitHeight
+              ),
+            ),
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.all(10),
+                child: Column(
+                  children: [
+                    textWidgets.paragraph('HOW TO USE THE META SNAPSHOT', context),
+                    textWidgets.text(usage, context),
+                    textWidgets.paragraph('LEGEND:', context),
+                    textWidgets.text(legend, context),
+                    textWidgets.paragraph('NEXT UPDATE', context),
+                    textWidgets.text(update, context),
+                  ],
+                ),
+              ),
+            )
         )
     );
   }

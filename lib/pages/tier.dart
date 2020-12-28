@@ -1,7 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_app/data/deck.dart';
-import 'package:flutter_app/pages/deck.dart';
 import 'package:http/http.dart' as http;
+
+import 'package:flutter/material.dart';
+import 'package:HSmeta/data/deck.dart';
+import 'package:HSmeta/pages/deck.dart';
+import 'package:HSmeta/components/text.dart';
+
 
 class TierPage extends StatelessWidget {
   final List<Deck> decks;
@@ -12,57 +15,60 @@ class TierPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Tier' + tier.toString()),
-      ),
-      // body: FutureBuilder<List<Deck>>(
-      //     future: fetchDecks(http.Client(), tier),
-      //     builder: (context, snapshot) {
-      //       if (snapshot.hasError) print(snapshot.error);
-      //       return snapshot.hasData
-      //           ? ListView.builder(
-      //         itemCount: snapshot.data.where((deck) => deck.tier == tier).length,
-      //         itemBuilder: (context, index) {
-      //           return SingleChildScrollView(
-      //             child: Card(
-      //                 child: ListTile(
-      //                   title: Text(snapshot.data.where((deck) => deck.tier == tier).toList()[index].name),
-      //                   onTap: () {
-      //                     Navigator.push(
-      //                       context,
-      //                       MaterialPageRoute(
-      //                         builder: (context) => DeckPage(deck: snapshot.data.where((deck) => deck.tier == tier).toList()[index]),
-      //                       ),
-      //                     );
-      //                   },
-      //                 )
-      //             ),
-      //           );
-      //         },
-      //       )
-      //           : Container(alignment: Alignment.center, child: CircularProgressIndicator());
-      //     }
-      // ),
-      body: ListView.builder(
-        itemCount: decks.where((deck) => deck.tier == tier).length,
-        itemBuilder: (context, index) {
-          return SingleChildScrollView(
-            child: Card(
-                child: ListTile(
-                  title: Text(decks.where((deck) => deck.tier == tier).toList()[index].name),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => DeckPage(deck: decks.where((deck) => deck.tier == tier).toList()[index]),
-                      ),
-                    );
-                  },
-                )
+        appBar: AppBar(
+          flexibleSpace: Container(
+            decoration:
+            BoxDecoration(
+              color: Color.fromRGBO(0, 0, 0, 0.5),
+              image: DecorationImage(
+                image: AssetImage('images/bcg1.png'),
+                colorFilter: ColorFilter.mode(Colors.black54, BlendMode.overlay),
+                fit: BoxFit.cover,
+              ),
             ),
-          );
-        },
-      )
+          ),
+          backgroundColor: Colors.transparent,
+          title: textWidgets.header('HSmeta', context),
+        ),
+        body: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+                image: ExactAssetImage("images/bcg1.png"),
+                fit: BoxFit.fitHeight
+            ),
+          ),
+          child: ListView.builder(
+            itemCount: decks.length,
+            itemBuilder: (context, index) {
+              return SingleChildScrollView(
+                child: Card(
+                  child: Container(
+                    decoration:
+                    BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage('images/bcg1.png'),
+                        colorFilter: ColorFilter.mode(Colors.black38, BlendMode.overlay),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    child: ListTile(
+                      title: Text(decks[index].name, style: CustomTextStyle.button(context)),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => DeckPage(deck: decks[index]),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  color: Colors.transparent,
+                ),
+              );
+            },
+          ),
+        )
     );
   }
 }

@@ -1,9 +1,8 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_app/components/text.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
-import 'package:flutter_app/data/deck.dart';
+
+import 'package:HSmeta/components/text.dart';
+import 'package:HSmeta/data/deck.dart';
 
 class DeckPage extends StatelessWidget {
   final Deck deck;
@@ -14,74 +13,99 @@ class DeckPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(deck.name),
-        ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  textWidgets.title(deck.name, 5, 10, 30),
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      textWidgets.title('Hero name:', 5, 5, 20),
-                      Flexible(
-                        child: Padding(
-                          padding: EdgeInsets.only(left: 20),
-                          child: Text(deck.heroName, style: TextStyle(fontSize: 18)),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      textWidgets.title('Player class:', 5, 5, 20),
-                      Flexible(
-                        child: Padding(
-                          padding: EdgeInsets.only(left: 20),
-                          child: Text(deck.playerClass, style: TextStyle(fontSize: 18)),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      textWidgets.title('Deck type:', 5, 5, 20),
-                      Flexible(
-                        child: Padding(
-                          padding: EdgeInsets.only(left: 20),
-                          child: Text(deck.deckType, style: TextStyle(fontSize: 18)),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      textWidgets.title('Total dust:', 5, 5, 20),
-                      Flexible(
-                        child: Padding(
-                          padding: EdgeInsets.only(left: 20),
-                          child: Text(deck.dust.toString(), style: TextStyle(fontSize: 18)),
-                        ),
-                      ),
-                    ],
-                  ),
-                  textWidgets.title('Description:', 5, 5, 20),
-                  Text(deck.description, style: TextStyle(fontSize: 18)),
-                  textWidgets.title('Matchups:', 5, 5, 20),
-                  deck.matchUps.length > 0 ?
-                    Container(alignment: Alignment.center, width: 350, height: 350, child: CustomRoundedBars(transformMatchUp(deck.matchUps), animate: false))
-                    : Text('No matchups available', style: TextStyle(fontSize: 18)),
-                  textWidgets.title('Cards:', 5, 5, 20),
-                  CardsComponent(cards: deck.cards)
-                ]
+          flexibleSpace: Container(
+            decoration:
+            BoxDecoration(
+              color: Color.fromRGBO(0, 0, 0, 0.5),
+              image: DecorationImage(
+                image: AssetImage('images/bcg1.png'),
+                colorFilter: ColorFilter.mode(Colors.black54, BlendMode.overlay),
+                fit: BoxFit.cover,
+              ),
             ),
           ),
+          backgroundColor: Colors.transparent,
+          title: textWidgets.header('Tier' + deck.tier.toString(), context),
+        ),
+        body: Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: ExactAssetImage("images/bcg1.png"),
+                  fit: BoxFit.fitHeight
+              ),
+            ),
+            child:SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      textWidgets.title(deck.name, context),
+                      Row(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          textWidgets.paragraph('Hero name:', context),
+                          Flexible(
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 20),
+                              child: textWidgets.text(deck.heroName, context),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          textWidgets.paragraph('Player class:', context),
+                          Flexible(
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 20),
+                              child: textWidgets.text(deck.playerClass, context),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          textWidgets.paragraph('Deck type:', context),
+                          Flexible(
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 20),
+                              child: textWidgets.text(deck.deckType, context),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          textWidgets.paragraph('Total dust:', context),
+                          Flexible(
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 20),
+                              child: textWidgets.text(deck.dust.toString(), context),
+                            ),
+                          ),
+                        ],
+                      ),
+                      textWidgets.paragraph('Description:', context),
+                      textWidgets.text(deck.description, context),
+                      textWidgets.paragraph('Matchups:', context),
+                      deck.matchUps.length > 0 ?
+                      Container(
+                          alignment: Alignment.center,
+                          width: 350, height: 350,
+                          child: CustomRoundedBars(
+                              transformMatchUp(deck.matchUps),
+                              animate: false)
+                      ) : textWidgets.text('No matchups available',context),
+                      textWidgets.paragraph('Cards:',context),
+                      CardsComponent(cards: deck.cards)
+                    ]
+                ),
+              ),
+            )
         )
     );
   }
@@ -101,61 +125,71 @@ class CardsComponent extends StatelessWidget {
         itemCount: cards.length,
         itemBuilder: (context, index) {
           return Card(
-              child: ListTile(
-                title: textWidgets.title(cards[index].name, 5, 10, 20),
-                subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
+              child: Container(
+                  decoration:
+                  BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('images/bcg1.png'),
+                      colorFilter: ColorFilter.mode(Colors.black38, BlendMode.overlay),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  child:ListTile(
+                    title: textWidgets.title(cards[index].name, context),
+                    subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          textWidgets.title('Rarity:', 5, 5, 18),
-                          Flexible(
-                            child: Padding(
-                              padding: EdgeInsets.only(left: 20),
-                              child: Text(cards[index].rarity, style: TextStyle(fontSize: 18)),
-                            ),
+                          Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              textWidgets.paragraph('Rarity:', context),
+                              Flexible(
+                                child: Padding(
+                                  padding: EdgeInsets.only(left: 20),
+                                  child: textWidgets.text(cards[index].rarity, context),
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          textWidgets.title('Card quantity:', 5, 5, 18),
-                          Flexible(
-                            child: Padding(
-                              padding: EdgeInsets.only(left: 20),
-                              child: Text(cards[index].cardQuantity.toString(), style: TextStyle(fontSize: 18)),
-                            ),
+                          Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              textWidgets.paragraph('Card quantity:', context),
+                              Flexible(
+                                child: Padding(
+                                  padding: EdgeInsets.only(left: 20),
+                                  child: textWidgets.text(cards[index].cardQuantity.toString(), context),
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          textWidgets.title('Mana cost:', 5, 5, 18),
-                          Flexible(
-                            child: Padding(
-                              padding: EdgeInsets.only(left: 20),
-                              child: Text(cards[index].cost.toString(), style: TextStyle(fontSize: 18)),
-                            ),
+                          Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              textWidgets.paragraph('Mana cost:', context),
+                              Flexible(
+                                child: Padding(
+                                  padding: EdgeInsets.only(left: 20),
+                                  child: textWidgets.text(cards[index].cost.toString(), context),
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          textWidgets.title('Dust:', 5, 5, 18),
-                          Flexible(
-                            child: Padding(
-                              padding: EdgeInsets.only(left: 20),
-                              child: Text(cards[index].dust.toString(), style: TextStyle(fontSize: 18)),
-                            ),
+                          Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              textWidgets.paragraph('Dust:', context),
+                              Flexible(
+                                child: Padding(
+                                  padding: EdgeInsets.only(left: 20),
+                                  child: textWidgets.text(cards[index].dust.toString(), context),
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ]
-                ),
+                        ]
+                    ),
+                  )
               )
           );
         },
