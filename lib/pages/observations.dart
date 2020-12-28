@@ -59,17 +59,37 @@ class ObservationsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("HSmeta"),
+          flexibleSpace: Container(
+            decoration:
+            BoxDecoration(
+              color: Color.fromRGBO(0, 0, 0, 0.5),
+              image: DecorationImage(
+                image: AssetImage('images/bcg1.png'),
+                colorFilter: ColorFilter.mode(Colors.black54, BlendMode.overlay),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          backgroundColor: Colors.transparent,
+          title: textWidgets.header('HSmeta', context),
         ),
         resizeToAvoidBottomPadding: false,
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.all(10),
-            child: Column(
-              children: [
-                textWidgets.title('Observations', 5, 10, 30),
-                Text(intro, style: TextStyle(fontSize: 18))
-              ],
+        body: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+                image: ExactAssetImage("images/bcg1.png"),
+                fit: BoxFit.fitHeight
+            ),
+          ),
+          child:SingleChildScrollView(
+            child: Padding(
+                padding: EdgeInsets.all(10),
+                child: Column(
+                  children: [
+                    textWidgets.paragraph('THOUGHTS AND OBSERVATIONS', context),
+                    textWidgets.text(intro, context),
+                  ],
+                )
             ),
           ),
         )

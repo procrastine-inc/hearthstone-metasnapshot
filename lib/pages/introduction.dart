@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/components/text.dart';
-
+import 'package:flutter_app/main.dart';
 //delete this in future
 const String usage =
 '''This tier list shows the best decks to play in Ranked mode to maximize the 
@@ -58,23 +58,42 @@ class IntroductionPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("HSmeta"),
-        ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.all(10),
-            child: Column(
-              children: [
-                textWidgets.title('Introduction', 5, 10, 30),
-                textWidgets.title('HOW TO USE THE META SNAPSHOT', 5, 5, 20),
-                Text(usage, style: TextStyle(fontSize: 18)),
-                textWidgets.title('LEGEND:', 5, 5, 20),
-                Text(legend, style: TextStyle(fontSize: 18)),
-                textWidgets.title('NEXT UPDATE', 5, 5, 20),
-                Text(update, style: TextStyle(fontSize: 18)),
-              ],
+          flexibleSpace: Container(
+            decoration:
+            BoxDecoration(
+              color: Color.fromRGBO(0, 0, 0, 0.5),
+              image: DecorationImage(
+                image: AssetImage('images/bcg1.png'),
+                colorFilter: ColorFilter.mode(Colors.black54, BlendMode.overlay),
+                fit: BoxFit.cover,
+              ),
             ),
           ),
+          backgroundColor: Colors.transparent,
+          title: textWidgets.header('HSmeta', context),
+        ),
+        body: Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: ExactAssetImage("images/bcg1.png"),
+                  fit: BoxFit.fitHeight
+              ),
+            ),
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.all(10),
+                child: Column(
+                  children: [
+                    textWidgets.paragraph('HOW TO USE THE META SNAPSHOT', context),
+                    textWidgets.text(usage, context),
+                    textWidgets.paragraph('LEGEND:', context),
+                    textWidgets.text(legend, context),
+                    textWidgets.paragraph('NEXT UPDATE', context),
+                    textWidgets.text(update, context),
+                  ],
+                ),
+              ),
+            )
         )
     );
   }
