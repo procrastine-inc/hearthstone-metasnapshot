@@ -51,6 +51,10 @@ class NumericComboLinePointChart extends StatelessWidget {
                     color: charts.MaterialPalette.white)),
             viewport: new charts.NumericExtents(startPoint, endPoint)),
         primaryMeasureAxis: new charts.NumericAxisSpec(
+            tickProviderSpec: new charts.BasicNumericTickProviderSpec(
+              //dataIsInWholeNumbers: true,
+                desiredTickCount: 10
+            ),
             renderSpec: new charts.GridlineRendererSpec(
                 labelStyle: new charts.TextStyleSpec(
                     fontSize: 18, // size in Pts.

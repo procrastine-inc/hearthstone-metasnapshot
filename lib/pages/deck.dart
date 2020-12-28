@@ -97,7 +97,7 @@ class DeckPage extends StatelessWidget {
                         scrollDirection: Axis.horizontal,
                         child: Container(
                             alignment: Alignment.center,
-                            width: 350, height: 350,
+                            width: 350, height: 500,
                             child: CustomRoundedBars(
                                 transformMatchUp(deck.matchUps),
                                 animate: false)
@@ -241,7 +241,7 @@ class CustomRoundedBars extends StatelessWidget {
               labelStyle: new charts.TextStyleSpec(
                   fontSize: 16, // size in Pts.
                   color: charts.MaterialPalette.white),
-              labelRotation: 50,
+              labelRotation: 65,
               lineStyle: new charts.LineStyleSpec(
                   color: charts.MaterialPalette.white))),
       primaryMeasureAxis: new charts.NumericAxisSpec(
